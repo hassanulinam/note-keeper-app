@@ -1,24 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  Button,
+  Container,
+  createStyles,
+  Fab,
+  makeStyles,
+  Theme,
+} from "@material-ui/core";
+import { AddOutlined } from "@material-ui/icons";
+import "./App.css";
+import AddNoteModal from "./components/AddNoteModal";
+import Header from "./components/Header";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    fabAdd: {
+      margin: "auto 24px 32px auto",
+    },
+    container: {
+      display: "flex",
+      flexDirection: "column",
+      flexGrow: 1,
+    },
+  })
+);
 
 function App() {
+  const classes = useStyles();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <Container className={classes.container}>
+        <span className={classes.fabAdd}>
+          <AddNoteModal>
+            <Fab color="secondary" aria-label="add-note">
+              <AddOutlined />
+            </Fab>
+          </AddNoteModal>
+        </span>
+      </Container>
     </div>
   );
 }
