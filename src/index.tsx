@@ -10,10 +10,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <UserContextProvider>
-      <ThemeContextProvider>
+    <ThemeContextProvider>
+      <UserContextProvider>
         <App />
-      </ThemeContextProvider>
-    </UserContextProvider>
+      </UserContextProvider>
+    </ThemeContextProvider>
   </React.StrictMode>
 );

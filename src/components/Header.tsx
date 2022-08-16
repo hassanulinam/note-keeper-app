@@ -27,22 +27,34 @@ export default function ButtonAppBar() {
   const classes = useStyles();
   const googleProvider = new GoogleAuthProvider();
 
-  const { toggleTheme, isDark } = ThemeState();
+  const { toggleTheme, isDark, setNotifyToast } = ThemeState();
   const { user } = UserState();
 
   const signInWithGoogle = async () => {
     signInWithPopup(auth, googleProvider)
       .then((res) => {
-        console.log("SUCCESS TOAST: login success");
+        setNotifyToast({
+          open: true,
+          message: "Sign-in successful!",
+          type: "success",
+        });
       })
       .catch((err) => {
-        console.log("Signin Error", err);
+        setNotifyToast({
+          open: true,
+          message: "Sign-in: Error occured",
+          type: "error",
+        });
       });
   };
 
   const onLogout = () => {
     signOut(auth);
-    // Toast : logout success !
+    setNotifyToast({
+      open: true,
+      message: "sign out successful",
+      type: "warning",
+    });
   };
 
   return (

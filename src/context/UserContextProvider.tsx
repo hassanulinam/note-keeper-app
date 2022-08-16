@@ -3,6 +3,7 @@ import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { ChildProp, NoteObj, USER_CONTEXT } from "../config/customTypes";
 import { auth, db } from "../config/firebaseApp";
+import { ThemeState } from "./ThemeContextProvider";
 
 const UserContext = createContext<USER_CONTEXT>({
   user: null,
@@ -18,6 +19,8 @@ const UserContextProvider = ({ children }: ChildProp) => {
   const [notesList, setNotesList] = useState<NoteObj[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const collectionName = "noteslist";
+
+  const { setNotifyToast } = ThemeState();
 
   // sync the user auth
   useEffect(() => {
@@ -36,6 +39,11 @@ const UserContextProvider = ({ children }: ChildProp) => {
         if (documentSnap.exists()) setNotesList(documentSnap.data().notesList);
         else {
           console.log("NO ITEMS FOUND IN NotesList");
+          setNotifyToast({
+            open: true,
+            message: "Notes not found!",
+            type: "warning",
+          });
           setNotesList([]);
         }
       });
@@ -58,25 +66,43 @@ const UserContextProvider = ({ children }: ChildProp) => {
           "Error while updating Notes-List at FIRESTORE: ",
           err.message
         );
-        // ERROR TOAST....
+        setNotifyToast({
+          open: true,
+          message: "Error occured while updating notes",
+          type: "error",
+        });
       }
     } else setNotesList(updatedList);
   };
 
   const addNoteToList = async (newNote: NoteObj) => {
-    let newList;
+    let newList, toastMsg;
     const noteAlreadyExists = notesList.find((note) => note.id === newNote.id);
-    if (noteAlreadyExists)
+    if (noteAlreadyExists) {
       newList = notesList.map((note) =>
         note.id === newNote.id ? newNote : note
       );
-    else newList = [...notesList, newNote];
+      toastMsg = "Successfully updated the Note";
+    } else {
+      newList = [...notesList, newNote];
+      toastMsg = "Successfully created the Note";
+    }
     await updateListInFirestore(newList);
+    setNotifyToast({
+      open: true,
+      message: toastMsg,
+      type: "success",
+    });
   };
 
   const removeNoteFromList = async (noteId: number) => {
     const filteredList = notesList.filter((note) => note.id !== noteId);
     await updateListInFirestore(filteredList);
+    setNotifyToast({
+      open: true,
+      message: "Note deleted",
+      type: "warning",
+    });
   };
 
   const changePinnedStatus = async (noteId: number) => {

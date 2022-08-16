@@ -10,7 +10,7 @@ import "./App.css";
 import AddNoteModal from "./components/AddNoteModal";
 import Header from "./components/Header";
 import NoteCardsList from "./components/NoteCardsList";
-import { NoteObj } from "./config/customTypes";
+import ToastAlert from "./components/ToastAlert";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,6 +49,7 @@ function App() {
             </Fab>
           </AddNoteModal>
         </span>
+        <ToastAlert />
       </Container>
     </div>
   );

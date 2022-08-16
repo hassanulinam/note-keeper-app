@@ -1,3 +1,4 @@
+import { Color } from "@material-ui/lab";
 import { User } from "firebase/auth";
 
 export type NoteObj = {
@@ -20,3 +21,17 @@ export type USER_CONTEXT = {
 };
 
 export type ChildProp = { children: JSX.Element };
+
+export type ToastObj = {
+  open: boolean;
+  message: string;
+  type: Color;
+  duration?: number;
+};
+
+export type THEME_CONTEXT = {
+  toggleTheme: () => void;
+  isDark: boolean;
+  notifyToast: ToastObj;
+  setNotifyToast: React.Dispatch<React.SetStateAction<ToastObj>>;
+};
