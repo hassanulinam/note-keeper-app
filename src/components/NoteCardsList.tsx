@@ -10,8 +10,8 @@ const NoteCardsList = () => {
     <div className="note-cards-section">
       <h3>Notes</h3>
       <div className="note-cards-list">
-        {pinnedList.map((note) => (
-          <NoteCard key={note.id} data={note} />
+        {pinnedList.map((note, i) => (
+          <NoteCard key={i} data={note} />
         ))}
         {notesList?.map((note) =>
           note.isPinned ? null : <NoteCard key={note.id} data={note} />

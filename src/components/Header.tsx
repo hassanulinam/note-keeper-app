@@ -56,7 +56,7 @@ export default function ButtonAppBar() {
             {isDark ? <Brightness4Icon /> : <Brightness7Icon />}
           </IconButton>
           {user ? (
-            <Button variant="outlined" onClick={onLogout}>
+            <Button variant="outlined" color="secondary" onClick={onLogout}>
               Logout
             </Button>
           ) : (

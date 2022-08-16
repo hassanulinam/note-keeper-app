@@ -64,7 +64,13 @@ const UserContextProvider = ({ children }: ChildProp) => {
   };
 
   const addNoteToList = async (newNote: NoteObj) => {
-    const newList = [...notesList, newNote];
+    let newList;
+    const noteAlreadyExists = notesList.find((note) => note.id === newNote.id);
+    if (noteAlreadyExists)
+      newList = notesList.map((note) =>
+        note.id === newNote.id ? newNote : note
+      );
+    else newList = [...notesList, newNote];
     await updateListInFirestore(newList);
   };
 

@@ -3,15 +3,23 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import "./styles.css";
-import { InputBase, IconButton, Button } from "@material-ui/core";
+import {
+  InputBase,
+  IconButton,
+  Button,
+  Chip,
+  Popover,
+} from "@material-ui/core";
 import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import { Bookmark } from "@material-ui/icons";
+import { Add, Bookmark } from "@material-ui/icons";
 import { UserState } from "../context/UserContextProvider";
 import { format } from "date-fns";
+import "./styles.css";
+import { NoteObj } from "../config/customTypes";
 
 type CustomProps = {
   children: JSX.Element;
+  data: NoteObj;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,31 +44,56 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const AddNoteModal = ({ children }: CustomProps) => {
+const AddNoteModal = ({ children, data }: CustomProps) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const [isPinned, setIsPinned] = useState(false);
-  const [title, setTitle] = useState("");
-  const [note, setNote] = useState("");
-  const [labels, setLabels] = useState<string[]>(["first"]); // ---- pending....
+  const [isPinned, setIsPinned] = useState(data.isPinned);
+  const [title, setTitle] = useState(data.title);
+  const [note, setNote] = useState(data.note);
+  const [labels, setLabels] = useState<string[]>([...data.labels]); // ---- pending....
+  const [newLabel, setNewLabel] = useState("");
+
+  const [openModal, setOpenModal] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<any>(null);
+
+  const handleClosePopover = () => {
+    if (newLabel) setLabels([...labels, newLabel]);
+    setAnchorEl(null);
+    setNewLabel("");
+  };
+
+  const openPop = Boolean(anchorEl);
+  const popoverId = openModal ? "add-label-popover" : undefined;
 
   const { addNoteToList, notesList } = UserState();
 
+  const setInputsToDefaults = () => {
+    setTitle(data.title);
+    setNote(data.note);
+    setLabels([...data.labels]);
+    setIsPinned(data.isPinned);
+  };
+
   const handleOpen = () => {
-    setOpen(true);
+    setOpenModal(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setInputsToDefaults();
+    setOpenModal(false);
   };
 
   const saveNote = () => {
+    if (!(title || note)) {
+      // toast warning : Empty note
+      handleClose();
+      return;
+    }
     addNoteToList({
       title,
       note,
       isPinned,
       labels,
-      id: notesList?.length + 1,
+      id: data.id === -1 ? notesList?.length + 1 : data.id,
       date: format(new Date(), "MMM dd yyyy"),
     });
     handleClose();
@@ -73,7 +106,7 @@ const AddNoteModal = ({ children }: CustomProps) => {
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
-        open={open}
+        open={openModal}
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -81,7 +114,7 @@ const AddNoteModal = ({ children }: CustomProps) => {
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={openModal}>
           <div className={classes.paper}>
             <div className="flex-row-spbtw">
               <InputBase
@@ -102,6 +135,50 @@ const AddNoteModal = ({ children }: CustomProps) => {
               style={{ fontSize: "medium", padding: "8px 4px" }}
               multiline
             />
+            <div className="labels-container">
+              {labels?.map((lb, i) => (
+                <Chip
+                  key={i}
+                  label={lb}
+                  size="small"
+                  onDelete={() => setLabels(labels.filter((i) => i !== lb))}
+                />
+              ))}
+              <Chip
+                icon={<Add />}
+                label="add label"
+                size="small"
+                onClick={(e: any) => setAnchorEl(e.currentTarget)}
+                aria-describedby={popoverId}
+              />
+              <Popover
+                id={popoverId}
+                open={openPop}
+                anchorEl={anchorEl}
+                onClose={handleClosePopover}
+                anchorOrigin={{ vertical: "top", horizontal: "left" }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <div className="popover-content">
+                  <InputBase
+                    placeholder="new label"
+                    value={newLabel}
+                    onChange={(e: any) => setNewLabel(e.target.value)}
+                    style={{ padding: "0 8px", fontSize: "small" }}
+                  />
+                  <Button
+                    onClick={handleClosePopover}
+                    color="primary"
+                    size="small"
+                  >
+                    add
+                  </Button>
+                </div>
+              </Popover>
+            </div>
             <div className="flex-row-spbtw mt-2">
               <Button
                 size="small"

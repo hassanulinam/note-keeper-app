@@ -5,17 +5,19 @@ import {
   Chip,
   IconButton,
 } from "@material-ui/core";
-import { Bookmark, BookmarkBorder } from "@material-ui/icons";
+import { Bookmark, BookmarkBorder, Edit } from "@material-ui/icons";
 import DeleteIcon from "@material-ui/icons/Delete";
 import HistoryIcon from "@material-ui/icons/History";
 import { NoteObj } from "../config/customTypes";
 import { UserState } from "../context/UserContextProvider";
+import AddNoteModal from "./AddNoteModal";
 import "./styles.css";
 
 const NoteCard = ({ data }: { data: NoteObj }) => {
   const { title, note, isPinned, labels, id, date } = data;
-
   const { changePinnedStatus, removeNoteFromList, removeLabel } = UserState();
+
+  // console.log("NOTE-CARD--DATA", data);
 
   return (
     <Card variant="outlined" className="note-card">
@@ -31,7 +33,7 @@ const NoteCard = ({ data }: { data: NoteObj }) => {
         </div>
         <p className="card-text">{note}</p>
         <div className="flex-row-spbtw">
-          <span>
+          <div className="labels-container">
             {labels.map((lb, i) => (
               <Chip
                 key={i}
@@ -40,7 +42,7 @@ const NoteCard = ({ data }: { data: NoteObj }) => {
                 onDelete={() => removeLabel(id, lb)}
               />
             ))}
-          </span>
+          </div>
           <span className="note-card-date">
             <HistoryIcon style={{ fontSize: 14, margin: 0 }} />
             {date.toLocaleString()}
@@ -48,8 +50,13 @@ const NoteCard = ({ data }: { data: NoteObj }) => {
         </div>
       </CardContent>
       <CardActions>
+        <AddNoteModal data={data}>
+          <IconButton>
+            <Edit fontSize="small" />
+          </IconButton>
+        </AddNoteModal>
         <IconButton onClick={() => removeNoteFromList(id)}>
-          <DeleteIcon fontSize="small" />
+          <DeleteIcon fontSize="small" color="secondary" />
         </IconButton>
       </CardActions>
     </Card>

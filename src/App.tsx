@@ -10,6 +10,7 @@ import "./App.css";
 import AddNoteModal from "./components/AddNoteModal";
 import Header from "./components/Header";
 import NoteCardsList from "./components/NoteCardsList";
+import { NoteObj } from "./config/customTypes";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +25,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const emptyNoteObj = {
+  title: "",
+  note: "",
+  isPinned: false,
+  labels: [],
+  id: -1,
+  date: "",
+};
+
 function App() {
   const classes = useStyles();
 
@@ -33,7 +43,7 @@ function App() {
       <Container className={classes.container}>
         <NoteCardsList />
         <span className={classes.fabAdd}>
-          <AddNoteModal>
+          <AddNoteModal data={emptyNoteObj}>
             <Fab color="secondary" aria-label="add-note">
               <AddOutlined />
             </Fab>

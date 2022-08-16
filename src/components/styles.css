@@ -6,6 +6,17 @@
   align-items: center;
 }
 
+.popover-content {
+}
+
+.labels-container {
+  margin-top: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+/* ------------------------------------------------ */
+
 .note-cards-section {
   margin-top: 48px;
 }
@@ -25,10 +36,16 @@
   color: gray;
 }
 
+/* -------------------------------------- */
+
 .note-card {
   align-self: flex-start;
   width: 100%;
   max-width: 350px;
+}
+
+.note-card:hover {
+  box-shadow: 0 0 5px gray;
 }
 
 .note-card-content {
