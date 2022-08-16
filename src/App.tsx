@@ -1,6 +1,4 @@
 import {
-  Button,
-  Card,
   Container,
   createStyles,
   Fab,
@@ -11,7 +9,7 @@ import { AddOutlined } from "@material-ui/icons";
 import "./App.css";
 import AddNoteModal from "./components/AddNoteModal";
 import Header from "./components/Header";
-import { UserState } from "./context/UserContextProvider";
+import NoteCardsList from "./components/NoteCardsList";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,21 +26,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function App() {
   const classes = useStyles();
-  const { user, notesList } = UserState();
-
-  console.log("NOTES: ", notesList);
 
   return (
     <div className="App">
       <Header />
       <Container className={classes.container}>
-        <div>
-          {notesList?.map((note, i) => (
-            <Card key={i} style={{ margin: 8, padding: 16, width: 300 }}>
-              <span>{note.title}</span>
-            </Card>
-          ))}
-        </div>
+        <NoteCardsList />
         <span className={classes.fabAdd}>
           <AddNoteModal>
             <Fab color="secondary" aria-label="add-note">

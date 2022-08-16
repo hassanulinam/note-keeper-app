@@ -8,6 +8,7 @@ import { InputBase, IconButton, Button } from "@material-ui/core";
 import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
 import { Bookmark } from "@material-ui/icons";
 import { UserState } from "../context/UserContextProvider";
+import { format } from "date-fns";
 
 type CustomProps = {
   children: JSX.Element;
@@ -43,7 +44,7 @@ const AddNoteModal = ({ children }: CustomProps) => {
   const [note, setNote] = useState("");
   const [labels, setLabels] = useState<string[]>(["first"]); // ---- pending....
 
-  const { addNoteToList } = UserState();
+  const { addNoteToList, notesList } = UserState();
 
   const handleOpen = () => {
     setOpen(true);
@@ -54,7 +55,14 @@ const AddNoteModal = ({ children }: CustomProps) => {
   };
 
   const saveNote = () => {
-    addNoteToList({ title, note, isPinned, labels });
+    addNoteToList({
+      title,
+      note,
+      isPinned,
+      labels,
+      id: notesList?.length + 1,
+      date: format(new Date(), "MMM dd yyyy"),
+    });
     handleClose();
   };
 

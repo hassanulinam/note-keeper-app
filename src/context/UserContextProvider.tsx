@@ -9,6 +9,9 @@ const UserContext = createContext<USER_CONTEXT>({
   notesList: [],
   addNoteToList: () => {},
   removeNoteFromList: () => {},
+  changePinnedStatus: (noteId) => {},
+  addLabel: (noteId, selectedLabel) => {},
+  removeLabel: (noteId, selectedLabel) => {},
 });
 
 const UserContextProvider = ({ children }: ChildProp) => {
@@ -36,34 +39,79 @@ const UserContextProvider = ({ children }: ChildProp) => {
           setNotesList([]);
         }
       });
-    }
+    } else setNotesList([]);
+
     return unsubscribe;
   }, [user]);
 
-  const addNoteToList = async (newNote: NoteObj) => {
+  const updateListInFirestore = async (updatedList: NoteObj[]) => {
     if (user) {
       const notesRef = doc(db, collectionName, user.uid);
-      console.log("NOTES REF: ", notesRef);
       try {
-        await setDoc(notesRef, { notesList: [...notesList, newNote] });
+        await setDoc(notesRef, {
+          notesList: updatedList,
+        });
         // SUCCESS TOAST
-        console.log("successfully added note to FIRESTORE");
+        console.log("updated Notes-List at FIRESTORE");
       } catch (err: any) {
-        console.log("Error While adding note: ", err.message);
+        console.log(
+          "Error while updating Notes-List at FIRESTORE: ",
+          err.message
+        );
         // ERROR TOAST....
       }
-    } else {
-      setNotesList([...notesList, newNote]);
-      // WARNING TOAST (temporary saving of data)
-      console.log("ADDING NOTES IN OFFLINE MODE");
-    }
+    } else setNotesList(updatedList);
   };
 
-  const removeNoteFromList = async (noteId: string) => {};
+  const addNoteToList = async (newNote: NoteObj) => {
+    const newList = [...notesList, newNote];
+    await updateListInFirestore(newList);
+  };
+
+  const removeNoteFromList = async (noteId: number) => {
+    const filteredList = notesList.filter((note) => note.id !== noteId);
+    await updateListInFirestore(filteredList);
+  };
+
+  const changePinnedStatus = async (noteId: number) => {
+    const updatedList = notesList.map((note) =>
+      note.id === noteId ? { ...note, isPinned: !note.isPinned } : note
+    );
+    await updateListInFirestore(updatedList);
+  };
+
+  const addLabel = async (noteId: number, newLabel: string) => {
+    const updatedList = notesList.map((note) =>
+      note.id === noteId
+        ? { ...note, labels: [...note.labels, newLabel] }
+        : note
+    );
+    await updateListInFirestore(updatedList);
+  };
+
+  const removeLabel = async (noteId: number, selectedLabel: string) => {
+    const udpatedList = notesList.map((note) =>
+      note.id === noteId
+        ? {
+            ...note,
+            labels: note.labels.filter((lb) => lb !== selectedLabel),
+          }
+        : note
+    );
+    await updateListInFirestore(udpatedList);
+  };
 
   return (
     <UserContext.Provider
-      value={{ notesList, user, addNoteToList, removeNoteFromList }}
+      value={{
+        notesList,
+        user,
+        addNoteToList,
+        removeNoteFromList,
+        changePinnedStatus,
+        addLabel,
+        removeLabel,
+      }}
     >
       {children}
     </UserContext.Provider>
