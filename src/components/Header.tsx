@@ -3,10 +3,12 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import { ThemeState } from "../context/CustomThemeProvider";
+import { ThemeState } from "../context/ThemeContextProvider";
 import { IconButton } from "@material-ui/core";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../config/firebaseApp";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,8 +24,19 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function ButtonAppBar() {
   const classes = useStyles();
+  const googleProvider = new GoogleAuthProvider();
 
   const { toggleTheme, isDark } = ThemeState();
+
+  const signInWithGoogle = async () => {
+    signInWithPopup(auth, googleProvider)
+      .then((res) => {
+        console.log("SUCCESS TOAST: login success");
+      })
+      .catch((err) => {
+        console.log("Signin Error", err);
+      });
+  };
 
   return (
     <div className={classes.root}>
@@ -33,9 +46,11 @@ export default function ButtonAppBar() {
             Note Keeper
           </Typography>
           <IconButton className={classes.themeButton} onClick={toggleTheme}>
-            {isDark ? <Brightness7Icon /> : <Brightness4Icon />}
+            {isDark ? <Brightness4Icon /> : <Brightness7Icon />}
           </IconButton>
-          <Button variant="outlined">Login</Button>
+          <Button variant="outlined" onClick={signInWithGoogle}>
+            Login
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
