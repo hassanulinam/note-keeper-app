@@ -84,7 +84,7 @@ const UserContextProvider = ({ children }: ChildProp) => {
       );
       toastMsg = "Successfully updated the Note";
     } else {
-      newList = [...notesList, newNote];
+      newList = [newNote, ...notesList];
       toastMsg = "Successfully created the Note";
     }
     await updateListInFirestore(newList);
@@ -95,7 +95,7 @@ const UserContextProvider = ({ children }: ChildProp) => {
     });
   };
 
-  const removeNoteFromList = async (noteId: number) => {
+  const removeNoteFromList = async (noteId: string) => {
     const filteredList = notesList.filter((note) => note.id !== noteId);
     await updateListInFirestore(filteredList);
     setNotifyToast({
@@ -105,14 +105,14 @@ const UserContextProvider = ({ children }: ChildProp) => {
     });
   };
 
-  const changePinnedStatus = async (noteId: number) => {
+  const changePinnedStatus = async (noteId: string) => {
     const updatedList = notesList.map((note) =>
       note.id === noteId ? { ...note, isPinned: !note.isPinned } : note
     );
     await updateListInFirestore(updatedList);
   };
 
-  const addLabel = async (noteId: number, newLabel: string) => {
+  const addLabel = async (noteId: string, newLabel: string) => {
     const updatedList = notesList.map((note) =>
       note.id === noteId
         ? { ...note, labels: [...note.labels, newLabel] }
@@ -121,7 +121,7 @@ const UserContextProvider = ({ children }: ChildProp) => {
     await updateListInFirestore(updatedList);
   };
 
-  const removeLabel = async (noteId: number, selectedLabel: string) => {
+  const removeLabel = async (noteId: string, selectedLabel: string) => {
     const udpatedList = notesList.map((note) =>
       note.id === noteId
         ? {

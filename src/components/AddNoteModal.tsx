@@ -14,6 +14,7 @@ import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
 import { Add, Bookmark } from "@material-ui/icons";
 import { UserState } from "../context/UserContextProvider";
 import { format } from "date-fns";
+import { v4 as uuid } from "uuid";
 import "./styles.css";
 import { NoteObj } from "../config/customTypes";
 
@@ -93,7 +94,7 @@ const AddNoteModal = ({ children, data }: CustomProps) => {
       note,
       isPinned,
       labels,
-      id: data.id === -1 ? notesList?.length + 1 : data.id,
+      id: data.id === "new-note" ? uuid() : data.id,
       date: format(new Date(), "MMM dd yyyy"),
     });
     handleClose();

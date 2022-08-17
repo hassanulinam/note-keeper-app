@@ -30,7 +30,7 @@ const emptyNoteObj = {
   note: "",
   isPinned: false,
   labels: [],
-  id: -1,
+  id: "new-note",
   date: "",
 };
 
