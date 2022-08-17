@@ -15,7 +15,9 @@ import ToastAlert from "./components/ToastAlert";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     fabAdd: {
-      margin: "auto 24px 32px auto",
+      position: "fixed",
+      bottom: 32,
+      right: "10%",
     },
     container: {
       display: "flex",

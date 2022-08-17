@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Chip,
-  IconButton,
-} from "@material-ui/core";
+import { Card, CardContent, Chip, IconButton } from "@material-ui/core";
 import { Bookmark, BookmarkBorder, Edit } from "@material-ui/icons";
 import DeleteIcon from "@material-ui/icons/Delete";
 import HistoryIcon from "@material-ui/icons/History";
@@ -16,8 +10,6 @@ import "./styles.css";
 const NoteCard = ({ data }: { data: NoteObj }) => {
   const { title, note, isPinned, labels, id, date } = data;
   const { changePinnedStatus, removeNoteFromList, removeLabel } = UserState();
-
-  // console.log("NOTE-CARD--DATA", data);
 
   return (
     <Card variant="outlined" className="note-card">

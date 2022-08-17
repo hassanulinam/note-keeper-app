@@ -95,7 +95,7 @@ const AddNoteModal = ({ children, data }: CustomProps) => {
       isPinned,
       labels,
       id: data.id === "new-note" ? uuid() : data.id,
-      date: format(new Date(), "MMM dd yyyy"),
+      date: format(new Date(), "MMM-dd, h:mm aaa"),
     });
     handleClose();
   };

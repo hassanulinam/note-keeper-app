@@ -4,7 +4,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { ThemeState } from "../context/ThemeContextProvider";
-import { IconButton } from "@material-ui/core";
+import { Avatar, IconButton, Tooltip, Zoom } from "@material-ui/core";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
@@ -13,8 +13,12 @@ import { UserState } from "../context/UserContextProvider";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {},
-    themeButton: {
+    root: {
+      position: "sticky",
+      top: 0,
+      zIndex: 5,
+    },
+    rightMargin: {
       marginRight: theme.spacing(2),
     },
     title: {
@@ -64,17 +68,33 @@ export default function ButtonAppBar() {
           <Typography variant="h6" className={classes.title}>
             Note Keeper
           </Typography>
-          <IconButton className={classes.themeButton} onClick={toggleTheme}>
-            {isDark ? <Brightness4Icon /> : <Brightness7Icon />}
-          </IconButton>
+          {user && (
+            <Tooltip title={user?.displayName || ""} TransitionComponent={Zoom}>
+              <Avatar
+                src={user?.photoURL as string}
+                className={classes.rightMargin}
+              />
+            </Tooltip>
+          )}
+          <Tooltip title="switch theme" TransitionComponent={Zoom}>
+            <IconButton className={classes.rightMargin} onClick={toggleTheme}>
+              {isDark ? (
+                <Brightness4Icon fontSize="large" />
+              ) : (
+                <Brightness7Icon fontSize="large" />
+              )}
+            </IconButton>
+          </Tooltip>
           {user ? (
             <Button variant="outlined" color="secondary" onClick={onLogout}>
               Logout
             </Button>
           ) : (
-            <Button variant="outlined" onClick={signInWithGoogle}>
-              Login
-            </Button>
+            <Tooltip title="sign in with Google">
+              <Button variant="outlined" onClick={signInWithGoogle}>
+                Login
+              </Button>
+            </Tooltip>
           )}
         </Toolbar>
       </AppBar>
