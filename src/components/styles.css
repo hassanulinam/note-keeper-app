@@ -13,6 +13,8 @@
   margin-top: 8px;
   display: flex;
   gap: 6px;
+  margin-bottom: 0;
+  flex-wrap: wrap;
 }
 
 /* ------------------------------------------------ */
@@ -36,12 +38,12 @@
   color: gray;
 }
 
-/* -------------------------------------- */
+/* NoteCard -------------------------------------- */
 
 .note-card {
   align-self: flex-start;
   width: 100%;
-  max-width: 350px;
+  max-width: 400px;
 }
 
 .note-card:hover {
@@ -51,10 +53,13 @@
 .note-card-content {
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
 .card-title {
   font-size: 24px;
   font-weight: 500;
+}
+
+.card-text {
+  margin-top: 4px;
 }

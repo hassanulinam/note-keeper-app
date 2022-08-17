@@ -101,7 +101,7 @@ const AddNoteModal = ({ children, data }: CustomProps) => {
   };
 
   return (
-    <div>
+    <>
       <span onClick={handleOpen}>{children}</span>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -200,7 +200,7 @@ const AddNoteModal = ({ children, data }: CustomProps) => {
           </div>
         </Fade>
       </Modal>
-    </div>
+    </>
   );
 };
 

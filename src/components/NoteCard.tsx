@@ -32,7 +32,7 @@ const NoteCard = ({ data }: { data: NoteObj }) => {
           </IconButton>
         </div>
         <p className="card-text">{note}</p>
-        <div className="flex-row-spbtw">
+        <div className="flex-row-spbtw mt-1">
           <div className="labels-container">
             {labels.map((lb, i) => (
               <Chip
@@ -49,7 +49,7 @@ const NoteCard = ({ data }: { data: NoteObj }) => {
           </span>
         </div>
       </CardContent>
-      <CardActions>
+      <div className="flex-row-spbtw">
         <AddNoteModal data={data}>
           <IconButton>
             <Edit fontSize="small" />
@@ -58,7 +58,7 @@ const NoteCard = ({ data }: { data: NoteObj }) => {
         <IconButton onClick={() => removeNoteFromList(id)}>
           <DeleteIcon fontSize="small" color="secondary" />
         </IconButton>
-      </CardActions>
+      </div>
     </Card>
   );
 };
