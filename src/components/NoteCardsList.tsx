@@ -9,15 +9,8 @@ const NoteCardsList = () => {
 
   const { notesList } = UserState();
 
-  const pinnedList = notesList.filter((note) => note.isPinned);
-
   const sortedList = [...notesList].sort((a, b) =>
     a.isPinned === true && b.isPinned === false ? -1 : 1
-  );
-
-  console.log(
-    "slist",
-    sortedList.map((nt) => ({ title: nt.title, isPinned: nt.isPinned }))
   );
 
   return (
@@ -28,19 +21,22 @@ const NoteCardsList = () => {
           <NoteCard key={note.id} data={note} />
         ))}
       </div>
-      <Pagination
-        count={Math.ceil(notesList.length / 6)}
-        onChange={(_, value) => {
-          setPage(value);
-          window.scroll(0, 0);
-        }}
-        style={{
-          padding: 20,
-          width: "100%",
-          display: "flex",
-          justifyContent: "cetner",
-        }}
-      />
+
+      {sortedList.length > 6 && (
+        <Pagination
+          count={Math.ceil(notesList.length / 6)}
+          onChange={(_, value) => {
+            setPage(value);
+            window.scroll(0, 0);
+          }}
+          style={{
+            padding: 20,
+            width: "100%",
+            display: "flex",
+            justifyContent: "cetner",
+          }}
+        />
+      )}
     </div>
   );
 };
